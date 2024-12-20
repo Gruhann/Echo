@@ -1,8 +1,10 @@
-# React + Vite
+# Echo Music App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Get What You Didn't Get in Spotify
 
-Currently, two official plugins are available:
+Echo is a music application designed to provide a fresh and engaging experience for music lovers. Unlike traditional streaming services, Echo focuses on personalized playlists and a user-friendly interface that enhances your music discovery journey.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+- **Personalized Playlists**: Discover playlists tailored to your taste.
+- **Responsive Design**: Enjoy seamless navigation on both desktop and mobile devices.
+- **User-Friendly Interface**: Intuitive layout with easy access to your favorite features.
