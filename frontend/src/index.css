@@ -93,3 +93,13 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.tooltip {
+    position: absolute;
+    background-color: #1f2937; /* Dark background */
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    z-index: 10; /* Ensure it appears above other elements */
+    transition: opacity 0.2s ease-in-out;
+}

@@ -1,5 +1,7 @@
-import { Play, Pause, MoreHorizontal } from "lucide-react";
+import { Play, Pause, MoreHorizontal, Heart } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
+import { useNavigate } from "react-router-dom";
+import { usePlaylist } from '../contexts/PlaylistContext';
 
 type Song = {
     _id: string;
@@ -15,6 +17,8 @@ type SongListProps = {
 
 const SongList: React.FC<SongListProps> = ({ songs }) => {
     const { currentSong, isPlaying, playSong, pauseSong } = useAudio();
+    const navigate = useNavigate();
+    const { isLiked, toggleLikedSong } = usePlaylist();
 
     const handlePlayClick = (song: Song) => {
         if (currentSong?._id === song._id && isPlaying) {
@@ -22,6 +26,11 @@ const SongList: React.FC<SongListProps> = ({ songs }) => {
         } else {
             playSong(song);
         }
+    };
+
+    const handleRowClick = (song: Song) => {
+        console.log("Navigating to song:", song._id);
+        navigate(`/song/${song._id}`);
     };
 
     return (
@@ -36,6 +45,7 @@ const SongList: React.FC<SongListProps> = ({ songs }) => {
                 {songs.map((song, index) => (
                     <div 
                         key={song._id}
+                        onClick={() => handleRowClick(song)}
                         className={`grid grid-cols-[16px_4fr_3fr_minmax(120px,1fr)] gap-4 px-6 py-2 text-zinc-400 hover:bg-zinc-800/50 rounded-lg group ${
                             currentSong?._id === song._id ? 'bg-zinc-800/50' : ''
                         }`}
@@ -76,7 +86,25 @@ const SongList: React.FC<SongListProps> = ({ songs }) => {
                             <button className="invisible group-hover:visible">
                                 <MoreHorizontal size={20} />
                             </button>
+
+                            <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleLikedSong(song);
+                            }}
+                            className="flex items-center justify-center"
+                        >
+                            <Heart
+                                size={20}
+                                className={`${
+                                    isLiked(song._id)
+                                        ? 'fill-green-500 text-green-500'
+                                        : 'text-zinc-400 hover:text-white'
+                                }`}
+                            />
+                        </button>
                         </div>
+                        
                     </div>
                 ))}
             </div>

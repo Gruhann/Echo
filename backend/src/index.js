@@ -4,6 +4,8 @@ import mongoose from "mongoose";
 import cors from "cors";
 import songRoutes from "./routes/songs.js";
 import authRoutes from "./routes/auth.js";
+import playlistRoutes from './routes/playlist.js';
+import likedSongsRoutes from './routes/likedSongs.js';
 
 dotenv.config();
 
@@ -19,6 +21,8 @@ mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTop
 
 app.use("/api/songs", songRoutes);
 app.use("/api/auth", authRoutes);
+app.use('/api', playlistRoutes);
+app.use('/api', likedSongsRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

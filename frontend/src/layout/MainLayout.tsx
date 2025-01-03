@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Home, Library, Search, Plus, Heart, Play, Pause, SkipBack, SkipForward, Volume2, UserCircle } from "lucide-react";
 import { useAudio } from "../contexts/AudioContext";
 import { useState, useEffect } from "react";
+import { usePlaylist } from '../contexts/PlaylistContext';
 
 const MainLayout: React.FC<{ 
     children: React.ReactNode;
@@ -12,7 +13,7 @@ const MainLayout: React.FC<{
     const navigate = useNavigate();
     const [showDropdown, setShowDropdown] = useState(false);
     const [user, setUser] = useState<{ name: string } | null>(null);
-
+    const {  likedSongs } = usePlaylist();
     useEffect(() => {
         const userData = localStorage.getItem("user");
         if (userData) {
@@ -97,7 +98,7 @@ const MainLayout: React.FC<{
             </div>
 
             {/* Main Content */}
-            <div className="flex flex-1 gap-2 p-2 pt-0">
+            <div className="flex flex-1 gap-2 p-2 pt-2">
                 {/* Sidebar - Hidden on Mobile */}
                 <div className="hidden md:flex flex-col gap-2 w-[300px]">
                     <div className="bg-zinc-900 rounded-lg p-4">
@@ -113,13 +114,13 @@ const MainLayout: React.FC<{
                             to="/search" 
                             className="flex items-center gap-4 text-zinc-400 hover:text-white transition mt-4"
                         >
-                            <Search size={24} />
+                            <Search size={30} />
                             <input
                                 type="text"
                                 placeholder="Search songs..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="bg-zinc-800 text-white p-2 rounded-md w-full"
+                                className="bg-zinc-800 text-white p-2 pl-4 rounded-full w-full"
                             />
                         </Link>
                     </div>
@@ -131,25 +132,45 @@ const MainLayout: React.FC<{
                                 <Library size={24} />
                                 <span className="font-semibold">Your Library</span>
                             </div>
-                            <div className="flex items-center gap-2">
-                                <button className="p-2 hover:bg-zinc-800 rounded-full">
+                            <div className="relative">
+                                <button 
+                                    className="p-2 hover:bg-zinc-800 rounded-full"
+                                    onClick={() => navigate('/create-playlist')}
+                                >
                                     <Plus size={20} className="text-zinc-400 hover:text-white" />
                                 </button>
                             </div>
                         </div>
 
-                        {/* Playlists */}
+                        {/* Playlists Button */}
+                        <div 
+                            className="mt-4 flex items-center gap-4 hover:bg-zinc-800 p-2 rounded-md transition cursor-pointer"
+                            onClick={() => navigate('/playlists')}
+                        >
+                            <div className="bg-gradient-to-br from-purple-700 to-blue-300 p-4 rounded-md">
+                                <Library size={24} className="text-white" />
+                            </div>
+                            <div>
+                                <p className="text-white font-semibold">Playlists</p>
+                            </div>
+                        </div>
+
+                        {/* Liked Songs */}
                         <div className="mt-4">
                             <div className="flex flex-col gap-4">
-                                <div className="flex items-center gap-4 hover:bg-zinc-800 p-2 rounded-md transition">
+                                <div 
+                                    className="flex items-center gap-4 hover:bg-zinc-800 p-2 rounded-md transition cursor-pointer"
+                                    onClick={() => navigate('/liked-songs')}
+                                >
                                     <div className="bg-gradient-to-br from-purple-700 to-blue-300 p-4 rounded-md">
                                         <Heart size={24} className="text-white" />
                                     </div>
                                     <div>
                                         <p className="text-white font-semibold">Liked Songs</p>
-                                        <p className="text-zinc-400 text-sm">Playlist • 0 songs</p>
+                                        <p className="text-zinc-400 text-sm">{likedSongs.length} songs</p>
                                     </div>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -157,7 +178,7 @@ const MainLayout: React.FC<{
 
                 {/* Main Content Area with Bottom Padding for Player + Navbar */}
                 <div className="flex-1 overflow-y-auto pb-[146px]"> {/* 90px + 56px */}
-                    <div className="bg-gradient-to-b from-emerald-800 p-6 hidden md:block">
+                    <div className="bg-gradient-to-b rounded-lg from-emerald-800 p-6 hidden md:block">
                         <h1 className="text-3xl font-bold text-white">
                             Hi, {user?.name || 'there'}!
                         </h1>
@@ -165,11 +186,12 @@ const MainLayout: React.FC<{
                     <div className="p-6">
                         {children}
                     </div>
+
                 </div>
             </div>
 
             {/* Player Controls */}
-            <div className="md:h-[90px] h-[70px] bg-zinc-900 border-t border-zinc-800 p-4 fixed bottom-[56px] md:bottom-0 left-0 right-0">
+            <div className="md:h-[90px] h-[70px] bg-zinc-900 border-t rounded-full border-zinc-800 p-3 m-3 mb-4 fixed bottom-[56px] md:bottom-0 left-0 right-0">
                 <div className="flex items-center justify-between max-w-7xl mx-auto">
                     {/* Currently Playing */}
                     <div className="flex items-center gap-4 min-w-[180px] md:min-w-[240px]">
@@ -286,6 +308,7 @@ const MainLayout: React.FC<{
                     </button>
                 </div>
             )}
+            
         </div>
     );
 };

@@ -9,6 +9,11 @@ import SongDetails from "./components/SongDetails";
 import { Toaster } from 'react-hot-toast';
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { PlaylistProvider } from './contexts/PlaylistContext';
+import Playlists from './pages/Playlists';
+
+import LikedSongs from "./pages/LikedSongs";
+import CreatePlaylist from "./pages/CreatePlaylist";
 
 interface Song {
     _id: string;
@@ -69,33 +74,38 @@ function App() {
     }, [searchQuery, songs]);
 
     return (
-        <AudioProvider>
-            <Router>
-                <Toaster position="top-right" />
-                <Routes>
-                    <Route path="/login" element={!isAuthenticated ? <LoginForm /> : <Navigate to="/" />} />
-                    <Route path="/register" element={!isAuthenticated ? <RegisterForm /> : <Navigate to="/" />} />
-                    <Route
-                        path="/*"
-                        element={
-                            isAuthenticated ? (
-                                <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
-                                    <Routes>
-                                        <Route path="/" element={<SongList songs={filteredSongs} />} />
-                                        <Route path="/search" element={<SongList songs={filteredSongs} />} />
-                                        <Route path="/profile" element={<Profile />} />
-                                        <Route path="/song/:id" element={<SongDetails />} />
-                                        <Route path="/library" element={<div>Your Library</div>} />
-                                    </Routes>
-                                </MainLayout>
-                            ) : (
-                                <Navigate to="/login" />
-                            )
-                        }
-                    />
-                </Routes>
-            </Router>
-        </AudioProvider>
+        <PlaylistProvider>
+            <AudioProvider>
+                <Router>
+                    <Toaster position="top-right" />
+                    <Routes>
+                        <Route path="/login" element={!isAuthenticated ? <LoginForm /> : <Navigate to="/" />} />
+                        <Route path="/register" element={!isAuthenticated ? <RegisterForm /> : <Navigate to="/" />} />
+                        <Route
+                            path="/*"
+                            element={
+                                isAuthenticated ? (
+                                    <MainLayout searchQuery={searchQuery} setSearchQuery={setSearchQuery}>
+                                        <Routes>
+                                            <Route path="/" element={<SongList songs={filteredSongs} />} />
+                                            <Route path="/search" element={<SongList songs={filteredSongs} />} />
+                                            <Route path="/profile" element={<Profile />} />
+                                            <Route path="/song/:id" element={<SongDetails />} />
+                                            <Route path="/library" element={<div>Your Library</div>} />
+                                            <Route path="/liked-songs" element={<LikedSongs />} />
+                                            <Route path="/playlists" element={<Playlists />} />
+                                            <Route path="/create-playlist" element={<CreatePlaylist />} />
+                                        </Routes>
+                                    </MainLayout>
+                                ) : (
+                                    <Navigate to="/login" />
+                                )
+                            }
+                        />
+                    </Routes>
+                </Router>
+            </AudioProvider>
+        </PlaylistProvider>
     );
 }
 
